@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules")
 find_package(SFML 2.4 COMPONENTS graphics window system audio REQUIRED)
 
 # list .cpp files
-set(SOURCES main.cpp LP.cpp Game.cpp SceneGame.cpp LoadAssets.cpp GameObject.cpp GameObjectManager.cpp MP.cpp IP.cpp Camera.cpp Particle.cpp ParticleManager.cpp TileMap.cpp ExampleObject.cpp)
+set(SOURCES main.cpp EL.cpp LP.cpp Game.cpp SceneGame.cpp GameObject.cpp GameObjectManager.cpp MP.cpp IP.cpp Camera.cpp Particle.cpp ParticleManager.cpp TileMap.cpp ExampleObject.cpp)
 
 # add the executable
 add_executable(Game ${SOURCES}) 

@@ -2,6 +2,7 @@
 #define GAME_OBJECT_H_
 #include <SFML/Graphics.hpp>
 #include "Scene.h"
+#include "Camera.h"
 
 class Scene;
 
@@ -16,9 +17,9 @@ public:
     //Delayed Update - use this if something sould be calculated after normal Update
     virtual void DelayedUpdate(float delta_time);
     //Draw
-    virtual void Draw(sf::RenderWindow& render_window) const;
+    virtual void Draw(Camera& camera) const;
     //Delayed Updated - draw things after the normal Draw - helpful for UI
-    virtual void DelayedDraw(sf::RenderWindow& render_window) const;
+    virtual void DelayedDraw(Camera& camera) const;
 
     //This is called when colliding with another gameobject, write reaction logic here
     virtual void ReactOnCollision(GameObject& other);

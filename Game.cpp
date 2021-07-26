@@ -7,9 +7,10 @@
 
 static SceneNull nullScene;
 
-Game::Game(Camera* camera) : camera_{camera}, scene_{&nullScene}
+Game::Game() : scene_{&nullScene}
 {
-    loadAssets_.Load();
+    LP_.Load();
+    MP_.Load();
 
     AddScene("Game", new SceneGame(this));
 
@@ -28,14 +29,9 @@ void Game::Update(float delta_time)
     IP::Reset();
 }
 
-void Game::Draw(sf::RenderWindow& render_window)
+void Game::Draw(Camera& camera)
 {
-    scene_->Draw(render_window);
-}
-
-Camera* Game::GetCamera()
-{
-    return camera_;
+    scene_->Draw(camera);
 }
 
 void Game::AddScene(const std::string& name, Scene* scene)
@@ -56,6 +52,16 @@ void Game::EndScene()
     scene_ = &nullScene;
 }
 
+LP& Game::GetLP()
+{
+    return LP_;
+}
+
+MP& Game::GetMP()
+{
+    return MP_;
+}
+
 void Game::Clear()
 {
     scene_->End();
@@ -65,17 +71,4 @@ void Game::Clear()
         delete pair.second;
     }
     scenes_.clear();
-}
-
-
-//For MiniGames
-
-void Game::SetWin(const bool win)
-{
-    win_ = win;
-}
-
-bool Game::GetWin() const
-{
-    return win_;
 }

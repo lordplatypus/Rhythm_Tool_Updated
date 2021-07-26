@@ -1,105 +1,93 @@
 #include "MP.h"
-#include <unordered_map>
+#include "ID.h"
 
-std::unordered_map<int, sf::Music> musicMap_;
-std::unordered_map<int, sf::SoundBuffer> bufferMap_;
-std::unordered_map<int, sf::Sound> soundMap_;
+//initial
 
-MP::MP()
-{}
-
-MP::~MP()
-{}
-
-
-//Music
-
-int MP::SetMusic(const int key, const std::string& filePath)
+void MP::Load()
 {
-    musicMap_[key].openFromFile(filePath);
+    LoadMusic();
+    LoadSound();
 }
 
-void MP::PlayMusic(const int key)
+void MP::LoadMusic()
 {
-    musicMap_[key].play();
+    // SetMusic(Music Key, "Path to music");
 }
 
-void MP::PlayMusic(const int key, const bool loop)
+void MP::LoadSound()
+{
+    // SetSound(Sound Key, "Path to sound");
+}
+
+//Set && Get
+
+bool MP::SetMusic(const int musicKey, const std::string& filePath)
+{
+    return musicMap_[musicKey].openFromFile(filePath);
+}
+
+const sf::Music& MP::GetMusic(const int musicKey)
+{
+    return musicMap_[musicKey];
+}
+
+bool MP::SetSound(const int soundKey, const std::string& filePath)
+{
+    if (SetBuffer(soundKey, filePath)) soundMap_[soundKey].setBuffer(bufferMap_[soundKey]);
+    else return false;
+    return true;
+}
+
+bool MP::SetBuffer(const int soundKey, const std::string& filePath)
+{
+    return bufferMap_[soundKey].loadFromFile(filePath);
+}
+
+const sf::Sound& MP::GetSound(const int soundKey)
+{
+    return soundMap_[soundKey];
+}
+
+//Helpful Functions
+
+void MP::PlayMusic(const int musicKey, const bool loop)
 { 
-    musicMap_[key].play();
-    musicMap_[key].setLoop(loop);
+    musicMap_[musicKey].play();
+    musicMap_[musicKey].setLoop(loop);
 }
 
-void MP::PauseMusic(const int key)
+void MP::PauseMusic(const int musicKey)
 {
-    musicMap_[key].pause();
+    musicMap_[musicKey].pause();
 }
 
-void MP::StopMusic(const int key)
+void MP::StopMusic(const int musicKey)
 {
-    musicMap_[key].stop();
+    musicMap_[musicKey].stop();
 }
 
-void MP::LoopMusic(const int key, const bool loop)
+void MP::LoopMusic(const int musicKey, const bool loop)
 {
-    musicMap_[key].setLoop(loop);
+    musicMap_[musicKey].setLoop(loop);
 }
 
-void MP::RemoveMusic(const int key)
+void MP::PlaySound(const int soundKey, const bool loop)
 {
-    if (musicMap_[key].getStatus() == musicMap_[key].Playing) StopMusic(key);
-    soundMap_.erase(key);
+    soundMap_[soundKey].play();
+    soundMap_[soundKey].setLoop(loop);
 }
 
-void MP::ClearMusic()
+void MP::PauseSound(const int soundKey)
 {
-    musicMap_.clear();
+    soundMap_[soundKey].pause();
 }
 
-
-//Sound Effects
-
-int MP::SetSound(const int key, const std::string& filePath)
+void MP::StopSound(const int soundKey)
 {
-    bufferMap_[key].loadFromFile(filePath);
-    soundMap_[key].setBuffer(bufferMap_[key]);
+    soundMap_[soundKey].stop();
 }
 
-void MP::PlaySound(const int key)
+void MP::LoopSound(const int soundKey, const bool loop)
 {
-    soundMap_[key].play();
-}
-
-void MP::PlaySound(const int key, const bool loop)
-{
-    soundMap_[key].play();
-    soundMap_[key].setLoop(loop);
-}
-
-void MP::PauseSound(const int key)
-{
-    soundMap_[key].pause();
-}
-
-void MP::StopSound(const int key)
-{
-    soundMap_[key].stop();
-}
-
-void MP::LoopSound(const int key, const bool loop)
-{
-    soundMap_[key].setLoop(loop);
-}
-
-void MP::RemoveSound(const int key)
-{
-    if (soundMap_[key].getStatus() == soundMap_[key].Playing) StopSound(key);
-    soundMap_.erase(key);
-    bufferMap_.erase(key);
-}
-
-void MP::ClearSound()
-{
-    soundMap_.clear();
-    bufferMap_.clear();
+    soundMap_[soundKey].setLoop(loop);
 }

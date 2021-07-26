@@ -24,7 +24,7 @@ void ExampleObject::Update(float delta_time)
     //Calculations go here
 }
 
-void ExampleObject::Draw(sf::RenderWindow& render_window) const
+void ExampleObject::Draw(Camera& camera) const
 {
     //Set view (if using multiple views)
     //render_window.setView(*scene_->FindView("Name Of View"));
@@ -33,7 +33,7 @@ void ExampleObject::Draw(sf::RenderWindow& render_window) const
     //render_window.draw(sprite_);
 }
 
-void ExampleObject::DelayedDraw(sf::RenderWindow& render_window) const
+void ExampleObject::DelayedDraw(Camera& camera) const
 {
     //same as Draw
     //this function will be called after Draw

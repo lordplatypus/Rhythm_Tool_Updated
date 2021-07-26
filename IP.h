@@ -1,7 +1,8 @@
 #ifndef IP_H_
-#define ID_H_
+#define IP_H_
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <unordered_map>
 #include "Camera.h"
 
 class IP
@@ -10,37 +11,25 @@ public:
     IP();
     ~IP();
 
-    static void SetCamera(Camera* camera);
+    //Reset bools used for single button presses
+    void Update();
 
     //Keyboard Stuff
 
     //Returns true if the button given is currently being pressed - constantly active
-    static bool GetButton(sf::Keyboard::Key buttonID);
-
-    //Individual buttons - activates 1 per button press
-    static bool PressLeft();
-    static bool PressRight();
-    static bool PressUp();
-    static bool PressDown();
-    static bool PressSpace();
-    static bool PressW();
-    static bool PressA();
-    static bool PressS();
-    static bool PressD();
-    static bool PressZ();
-    static bool PressX();
+    bool GetButton(sf::Keyboard::Key buttonID);
+    bool GetButton(sf::Mouse::Button buttonID);
+    bool GetButtonDown(sf::Keyboard::Key buttonID);
+    bool GetButtonDown(sf::Mouse::Button buttonID);
 
     //Mouse Stuff
 
-    static bool GetMouseClick(sf::Mouse::Button buttonID);
-    static bool LeftClick();
-    static bool RightClick();
-    static sf::Vector2f GetMousePosition();
-    static void SetMousePosition(sf::Vector2i position);
+    sf::Vector2f GetMousePosition(Camera& camera);
+    void SetMousePosition(sf::Vector2i position);
 
-
-    //Reset bools used for single button presses
-    static void Reset();
+private:
+    std::unordered_map<sf::Keyboard::Key, bool> pressedKeys_;
+    std::unordered_map<sf::Mouse::Button, bool> pressedButtons_;
 };
 
 #endif

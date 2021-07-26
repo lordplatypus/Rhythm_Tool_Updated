@@ -8,8 +8,8 @@ public:
     ExampleObject(Scene* scene, const sf::Vector2f& position);
     ~ExampleObject() override;
     void Update(float delta_time) override;
-    void Draw(sf::RenderWindow& render_window) const override;
-    void DelayedDraw(sf::RenderWindow& render_window) const override;
+    void Draw(Camera& camera) const override;
+    void DelayedDraw(Camera& camera) const override;
 
 private:
     //Collision / Perception

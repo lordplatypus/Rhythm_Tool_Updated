@@ -16,9 +16,9 @@ public:
     //Same as Update, call after Update
     void DelayedUpdate(float delta_time);
     //Draw all gameobjects in the list
-    void Draw(sf::RenderWindow& render_window) const;
+    void Draw(Camera& camera) const;
     //Same as Draw, call after Draw
-    void DelayedDraw(sf::RenderWindow& render_window) const;
+    void DelayedDraw(Camera& camera) const;
     //Checks ONLY collision between gameobjects
     void Collision();
     //Checks collision between gameobjects but starts from the last created object

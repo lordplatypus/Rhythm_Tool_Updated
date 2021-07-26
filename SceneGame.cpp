@@ -10,7 +10,6 @@ SceneGame::~SceneGame()
 
 void SceneGame::Init()
 {
-    game_->SetWin(false);
     //AddGameObject(new Object(position, &pm_, this)); Example
 }
 
@@ -21,10 +20,10 @@ void SceneGame::Update(float delta_time)
     gom_.Remove(); //remove "dead" gameobjects
 }
 
-void SceneGame::Draw(sf::RenderWindow& render_window) const
+void SceneGame::Draw(Camera& camera) const
 {
-    gom_.Draw(render_window); //Regular draw - Draw GameObjects in order based on position in the list
-    gom_.DelayedDraw(render_window); //draw things after Regular draw is finished, helpful for UI or things that should always be drawn last
+    gom_.Draw(camera); //Regular draw - Draw GameObjects in order based on position in the list
+    gom_.DelayedDraw(camera); //draw things after Regular draw is finished, helpful for UI or things that should always be drawn last
 }
 
 void SceneGame::AddGameObject(GameObject* gameObject)
@@ -40,16 +39,6 @@ GameObject* SceneGame::FindGameObject(const std::string& string, const bool byNa
 void SceneGame::SortGameObjects()
 {
     gom_.SortByLayers();
-}
-
-sf::View* SceneGame::FindView(const std::string& viewName)
-{
-    return game_->GetCamera()->GetView(viewName);
-}
-
-void SceneGame::OnWin()
-{
-    game_->SetWin(true);
 }
 
 void SceneGame::ChangeScene(const std::string& sceneName)

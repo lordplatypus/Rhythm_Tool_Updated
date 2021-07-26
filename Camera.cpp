@@ -1,14 +1,16 @@
 #include "Camera.h"
 
 //Camera::Camera(sf::RenderWindow* render_window) : window_{render_window} {}
-Camera::Camera(sf::RenderWindow* renderWindow, const sf::Vector2f& aspectRatio) : 
-               renderWindow_{renderWindow}, aspectRatio_{aspectRatio} 
-{}
+Camera::Camera(sf::RenderWindow* renderWindow, const sf::Vector2f& aspectRatio)
+{
+    renderWindow_ = renderWindow;
+    SetAspectRatio(aspectRatio);
+    SetView("Main");
+    SetCurrentView("Main");
+}
 
 Camera::~Camera() 
-{
-    Clear();
-}
+{}
 
 const sf::RenderWindow& Camera::GetRenderWindow() const
 {
@@ -27,47 +29,88 @@ const sf::Vector2f& Camera::GetAspectRatio() const
 
 void Camera::SetView(const std::string& viewName)
 {
-    views_[viewName] = new sf::View(sf::FloatRect(0.0f, 0.0f, aspectRatio_.x, aspectRatio_.y));
+    views_[viewName] = sf::View(sf::FloatRect(0.0f, 0.0f, aspectRatio_.x, aspectRatio_.y));
 }
 
 void Camera::SetView(const std::string& viewName, float width, float height)
 {
-    views_[viewName] = new sf::View(sf::FloatRect(0.0f, 0.0f, width, height));
-    //SetCurrentView(viewName);
+    views_[viewName] = sf::View(sf::FloatRect(0.0f, 0.0f, width, height));
 }
 
 void Camera::SetView(const std::string& viewName, const sf::Vector2f& size)
 {
-    views_[viewName] = new sf::View(sf::FloatRect(0.0f, 0.0f, size.x, size.y));
-    //SetCurrentView(viewName);
+    views_[viewName] = sf::View(sf::FloatRect(0.0f, 0.0f, size.x, size.y));
 }
 
 void Camera::SetView(const std::string& viewName, const sf::FloatRect& viewArea)
 {
-    views_[viewName] = new sf::View(viewArea);
-    //SetCurrentView(viewName);
+    views_[viewName] = sf::View(viewArea);
 }
 
-sf::View* Camera::GetView(const std::string& viewName)
+const sf::View& Camera::GetView(const std::string& viewName)
 {
     return views_[viewName];
 }
 
-std::unordered_map<std::string, sf::View*> Camera::GetAllViews()
+void Camera::SetViewport(const std::string& viewName, const sf::FloatRect& viewport)
 {
-    return views_;
+    views_[viewName].setViewport(viewport);
 }
 
-void Camera::RemoveView(const std::string& viewName)
+void Camera::SetViewport(const std::string& viewName, const sf::Vector2f& viewSize)
 {
-    //Not sure if needed but left here just in case this may be used in the future
+    views_[viewName].setSize(viewSize);
 }
 
-void Camera::Clear()
+void Camera::SetViewCenter(const std::string& viewName, const sf::Vector2f& center)
 {
-    for (auto view : views_)
+    views_[viewName].setCenter(center);
+}
+
+void Camera::SetCurrentView(const std::string& viewName)
+{
+    renderWindow_->setView(views_[viewName]);
+    currentView_ = viewName;
+}
+
+const std::string& Camera::GetCurrentViewName() const
+{
+    return currentView_;
+}
+
+
+std::vector<std::string> Camera::GetVectorViewNames() const
+{
+    std::vector<std::string> names;
+    for (auto i : views_)
     {
-        delete view.second;
+        names.push_back(i.first);
     }
-    views_.clear();
+    return names;
+}
+
+
+void Camera::Draw(sf::CircleShape objectToDraw)
+{
+    renderWindow_->draw(objectToDraw);
+}
+
+void Camera::Draw(sf::RectangleShape objectToDraw)
+{
+    renderWindow_->draw(objectToDraw);
+}
+
+void Camera::Draw(sf::Sprite objectToDraw)
+{
+    renderWindow_->draw(objectToDraw);
+}
+
+void Camera::Draw(sf::Text objectToDraw)
+{
+    renderWindow_->draw(objectToDraw);
+}
+
+void Camera::Draw(TileMap objectToDraw)
+{
+    renderWindow_->draw(objectToDraw);
 }
