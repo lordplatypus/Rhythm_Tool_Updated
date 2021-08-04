@@ -36,11 +36,6 @@ GameObject* SceneGame::FindGameObject(const std::string& string, const bool byNa
     return gom_.Find(string, byName, byTag, byID); //returns a GameObject, returns a nullptr if the GameObject is not found
 }
 
-void SceneGame::SortGameObjects()
-{
-    gom_.SortByLayers();
-}
-
 void SceneGame::ChangeScene(const std::string& sceneName)
 {
     game_->ChangeScene(sceneName);

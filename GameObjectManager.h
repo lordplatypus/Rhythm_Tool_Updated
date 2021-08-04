@@ -37,8 +37,6 @@ public:
     void Remove();
     //Find a GameObject
     GameObject* Find(const std::string& string, const bool byName = true, const bool byTag = false, const bool byID = false);
-    //sort gameobjects by layer ID
-    void SortByLayers();
     //Delete all gameobjects, call when scene ends
     void Clear();
 

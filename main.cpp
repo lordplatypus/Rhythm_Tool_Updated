@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include "Game.h"
 #include "EL.h"
+#include "ID.h"
 
 int main()
 {
@@ -11,19 +12,26 @@ int main()
 
     DeltaTime deltaTime;
 
-    Camera camera(&render_window, sf::Vector2f(960.0f, 540.0f));
+    Camera camera(&render_window, sf::Vector2f(1920.0f, 1080.0f));
+    camera.AddView(view_main); //add the main view
+    camera.AddView(view_UI); //add the UI view
+    camera.AddLayer(layer_main); //add the main layer
+    camera.AddLayer(layer_particle); //add the particle layer
+    camera.AddLayer(layer_UI); //add the UI layer
 
-    EL EL{camera};
+    EL EL{camera}; //Setup the Event Listener
 
-    Game game{};
+    Game game{}; //Setup the Game
 
     while (EL.IsRunning())
     {//main game loop
-        EL.PollEvent(render_window);
-        game.Update(deltaTime.GetDeltaTime());
-        render_window.clear();
-        game.Draw(camera);
-        render_window.display();
+        EL.PollEvent(render_window); //Poll Events
+        game.Update(deltaTime.GetDeltaTime()); //Update phase
+        render_window.clear(); //clear the render window
+        camera.ClearLayers(); //clear the layers
+        game.Draw(camera); //Draw phase - Gameobjects tell if and where to be drawn
+        camera.DrawLayers(); //Draw phase - draw layers in order by layerID (specified in ID.h)
+        render_window.display(); //display in render window
     }
 
     return EXIT_SUCCESS;

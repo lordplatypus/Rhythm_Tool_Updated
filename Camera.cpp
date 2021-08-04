@@ -1,16 +1,22 @@
 #include "Camera.h"
+#include "ID.h"
 
 //Camera::Camera(sf::RenderWindow* render_window) : window_{render_window} {}
 Camera::Camera(sf::RenderWindow* renderWindow, const sf::Vector2f& aspectRatio)
 {
     renderWindow_ = renderWindow;
     SetAspectRatio(aspectRatio);
-    SetView("Main");
-    SetCurrentView("Main");
 }
 
 Camera::~Camera() 
 {}
+
+
+void Camera::Draw(const sf::Drawable& objectToDraw, const int layerID)
+{
+    layers_[layerID]->Draw(objectToDraw);
+}
+
 
 const sf::RenderWindow& Camera::GetRenderWindow() const
 {
@@ -27,90 +33,85 @@ const sf::Vector2f& Camera::GetAspectRatio() const
     return aspectRatio_;
 }
 
-void Camera::SetView(const std::string& viewName)
+void Camera::AddView(const int viewID)
 {
-    views_[viewName] = sf::View(sf::FloatRect(0.0f, 0.0f, aspectRatio_.x, aspectRatio_.y));
+    views_[viewID] = sf::View(sf::FloatRect(0.0f, 0.0f, aspectRatio_.x, aspectRatio_.y));
 }
 
-void Camera::SetView(const std::string& viewName, float width, float height)
+void Camera::AddView(const int viewID, float width, float height)
 {
-    views_[viewName] = sf::View(sf::FloatRect(0.0f, 0.0f, width, height));
+    views_[viewID] = sf::View(sf::FloatRect(0.0f, 0.0f, width, height));
 }
 
-void Camera::SetView(const std::string& viewName, const sf::Vector2f& size)
+void Camera::AddView(const int viewID, const sf::Vector2f& size)
 {
-    views_[viewName] = sf::View(sf::FloatRect(0.0f, 0.0f, size.x, size.y));
+    views_[viewID] = sf::View(sf::FloatRect(0.0f, 0.0f, size.x, size.y));
 }
 
-void Camera::SetView(const std::string& viewName, const sf::FloatRect& viewArea)
+void Camera::AddView(const int viewID, const sf::FloatRect& viewArea)
 {
-    views_[viewName] = sf::View(viewArea);
+    views_[viewID] = sf::View(viewArea);
 }
 
-const sf::View& Camera::GetView(const std::string& viewName)
+const sf::View& Camera::GetView(const int viewID)
 {
-    return views_[viewName];
+    return views_[viewID];
 }
 
-void Camera::SetViewport(const std::string& viewName, const sf::FloatRect& viewport)
+void Camera::SetViewport(const int viewID, const sf::FloatRect& viewport)
 {
-    views_[viewName].setViewport(viewport);
+    views_[viewID].setViewport(viewport);
 }
 
-void Camera::SetViewport(const std::string& viewName, const sf::Vector2f& viewSize)
+void Camera::SetViewport(const int viewID, const sf::Vector2f& viewSize)
 {
-    views_[viewName].setSize(viewSize);
+    views_[viewID].setSize(viewSize);
 }
 
-void Camera::SetViewCenter(const std::string& viewName, const sf::Vector2f& center)
+void Camera::SetViewCenter(const int viewID, const sf::Vector2f& center)
 {
-    views_[viewName].setCenter(center);
+    views_[viewID].setCenter(center);
 }
 
-void Camera::SetCurrentView(const std::string& viewName)
+void Camera::SetCurrentView(const int viewID)
 {
-    renderWindow_->setView(views_[viewName]);
-    currentView_ = viewName;
+    renderWindow_->setView(views_[viewID]);
+    currentView_ = viewID;
 }
 
-const std::string& Camera::GetCurrentViewName() const
+const int Camera::GetCurrentViewID() const
 {
     return currentView_;
 }
 
 
-std::vector<std::string> Camera::GetVectorViewNames() const
+std::vector<int> Camera::GetVectorViewIDs() const
 {
-    std::vector<std::string> names;
+    std::vector<int> IDs;
     for (auto i : views_)
     {
-        names.push_back(i.first);
+        IDs.push_back(i.first);
     }
-    return names;
+    return IDs;
 }
 
 
-void Camera::Draw(sf::CircleShape objectToDraw)
+void Camera::AddLayer(const int layerID)
 {
-    renderWindow_->draw(objectToDraw);
+    layers_[layerID] = new Layer;
 }
 
-void Camera::Draw(sf::RectangleShape objectToDraw)
+void Camera::DrawLayers()
 {
-    renderWindow_->draw(objectToDraw);
+    for (auto layer : layers_) 
+    {
+        if (layer.first == layer_UI) SetCurrentView(view_UI);
+        else SetCurrentView(view_main);
+        renderWindow_->draw(*layer.second);
+    }
 }
 
-void Camera::Draw(sf::Sprite objectToDraw)
+void Camera::ClearLayers()
 {
-    renderWindow_->draw(objectToDraw);
-}
-
-void Camera::Draw(sf::Text objectToDraw)
-{
-    renderWindow_->draw(objectToDraw);
-}
-
-void Camera::Draw(TileMap objectToDraw)
-{
-    renderWindow_->draw(objectToDraw);
+    for (auto layer : layers_) layer.second->Clear();
 }

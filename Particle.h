@@ -9,8 +9,8 @@ public:
     Particle(sf::Sprite sprite, float x, float y, float vx, float vy, float damp, float lifespan, float forceX, float forceY, float angle, float angularVelocity, 
         float startScale, float endScale, int red, int green, int blue, int startAlpha, int endAlpha, float progressSpeed = 1.0f);
     ~Particle();
-    void Update(float delta_time);
-    void Draw(sf::RenderWindow& render_window) const;
+    void Update(float delta_time) override;
+    void Draw(Camera& camera) const override;
     bool IsDead() const;
 
 private:  

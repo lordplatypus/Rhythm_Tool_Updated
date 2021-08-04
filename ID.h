@@ -6,7 +6,7 @@
 //Textures
 enum
 {
-    pic_texture_,
+    pic_texture,
 };
 
 //Font
@@ -24,10 +24,17 @@ enum
 //Layer group - order in which objects will be rendered (0 = back, 0 < front)
 enum
 {
-    layer_tilemap_,
-    layer_main_,
+    layer_tilemap,
+    layer_main,
     layer_particle,
-    layer_UI_
+    layer_UI
+};
+
+//Views
+enum
+{
+    view_main,
+    view_UI
 };
 
 #endif

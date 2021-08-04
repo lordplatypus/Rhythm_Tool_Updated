@@ -219,11 +219,6 @@ GameObject* GameObjectManager::FindByID(const int ID) const
     return nullptr;
 }
 
-void GameObjectManager::SortByLayers()
-{
-    gameObjects_.sort( [](GameObject* a, GameObject* b) {return a->GetLayerID() < b->GetLayerID();} );
-}
-
 void GameObjectManager::Clear()
 {
     for (auto gameObject : gameObjects_)

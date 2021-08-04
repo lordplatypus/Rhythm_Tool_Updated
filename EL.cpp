@@ -64,7 +64,7 @@ void EL::ResizeViews(const sf::Vector2u& sizeEvent)
         viewport.top = (1.0f - viewport.height) / 2.0f;
     }
 
-    for (auto i : camera_->GetVectorViewNames())
+    for (auto i : camera_->GetVectorViewIDs())
     {
         camera_->SetViewport(i, viewport);
     }

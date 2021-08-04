@@ -1,11 +1,12 @@
 #ifndef EXAMPLE_OBJECT_H_
 #define EXAMPLE_OBJECT_H_
 #include "GameObject.h"
+#include "LP.h"
 
 class ExampleObject : public GameObject
 {
 public:
-    ExampleObject(Scene* scene, const sf::Vector2f& position);
+    ExampleObject(Scene& scene, LP& LP, const sf::Vector2f& position);
     ~ExampleObject() override;
     void Update(float delta_time) override;
     void Draw(Camera& camera) const override;

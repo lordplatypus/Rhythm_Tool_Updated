@@ -55,9 +55,9 @@ void Particle::Update(float delta_time)
     sprite.setPosition(x, y);
 }
 
-void Particle::Draw(sf::RenderWindow& render_window) const
+void Particle::Draw(Camera& Camera) const
 {
     if (isDead) return;
 
-    render_window.draw(sprite);
+    Camera.Draw(sprite, layer_particle);
 }

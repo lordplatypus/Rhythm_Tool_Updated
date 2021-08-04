@@ -20,8 +20,6 @@ public:
     virtual void AddGameObject(GameObject* gameObject) = 0;
     //Find an object by either ID, Tag, or Name
     virtual GameObject* FindGameObject(const std::string& string, const bool byName = true, const bool byTag = false, const bool byID = false) = 0;
-    //Sort the GameObject list based on LayerID (found in GameObjects)
-    virtual void SortGameObjects() = 0;
     //Change to a different scene
     virtual void ChangeScene(const std::string& sceneName) = 0;
     //This is called when switching to a different scene, delete unneeded pointers and sprites here

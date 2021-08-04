@@ -1,19 +1,17 @@
 #include "ExampleObject.h"
 #include "ID.h"
-#include "LP.h"
-#include "IP.h"
 
-ExampleObject::ExampleObject(Scene* scene, const sf::Vector2f& position)
+ExampleObject::ExampleObject(Scene& scene, LP& LP, const sf::Vector2f& position)
 {
-    scene_ = scene;
+    scene_ = &scene;
     name_ = "ExampleObject";
     tag_ = "Example";
     position_ = position;
-    layerID_ = layer_main_;
+    layerID_ = layer_main;
     ID_ = 0;
 
     //Sprite set up
-    //sprite_ = LP::SetSprite("texture id", position_);
+    //sprite_ = LP.SetSprite(pic_texture, position_);
 }
 
 ExampleObject::~ExampleObject()
@@ -26,11 +24,8 @@ void ExampleObject::Update(float delta_time)
 
 void ExampleObject::Draw(Camera& camera) const
 {
-    //Set view (if using multiple views)
-    //render_window.setView(*scene_->FindView("Name Of View"));
-
-    //Draw sprite to render window
-    //render_window.draw(sprite_);
+    //Draw sprite to layer
+    //camera.Draw(sprite_, layer_main);
 }
 
 void ExampleObject::DelayedDraw(Camera& camera) const
