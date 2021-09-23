@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.18)
 
 # set the project name
 project(Game)
@@ -10,11 +10,11 @@ set(CMAKE_MODULE_PATH "/usr/share/SFML/cmake/Modules")
 find_package(SFML 2.4 COMPONENTS graphics window system audio REQUIRED)
 
 # list .cpp files
-set(SOURCES main.cpp EL.cpp LP.cpp Game.cpp SceneGame.cpp GameObject.cpp GameObjectManager.cpp MP.cpp IP.cpp Camera.cpp Particle.cpp 
-            ParticleManager.cpp TileMap.cpp ExampleObject.cpp Layer.cpp)
+set(SOURCES)
 
 # add sub directories
-# add_subdirectory(FolderName)
+add_subdirectory(Base)
+add_subdirectory(BPMScene)
 
 # EXAMPLE: CMakeList.txt in sub directory
 # set(SOURCES
@@ -27,7 +27,8 @@ set(SOURCES main.cpp EL.cpp LP.cpp Game.cpp SceneGame.cpp GameObject.cpp GameObj
 add_executable(Game ${SOURCES})
 
 # link sub directories
-# target_link_directories(Game PUBLIC "${Game_SOURCE_DIR}/FolderName")
+target_link_directories(Game PUBLIC "${Game_SOURCE_DIR}/Base")
+target_link_directories(Game PUBLIC "${Game_SOURCE_DIR}/BPMScene")
 
 # link SFML libraries
 target_link_libraries(Game sfml-graphics sfml-window sfml-system sfml-audio)

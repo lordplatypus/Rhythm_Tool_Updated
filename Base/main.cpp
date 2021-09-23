@@ -8,11 +8,11 @@
 int main()
 {
     bool isRunning = true;//bool for main game loop
-    sf::RenderWindow render_window(sf::VideoMode(960.0f, 540.0f), "Game"); //game window
+    sf::RenderWindow render_window(sf::VideoMode(1080.0f, 720.0f), "Game"); //game window
 
     DeltaTime deltaTime;
 
-    Camera camera(&render_window, sf::Vector2f(1920.0f, 1080.0f));
+    Camera camera(&render_window, sf::Vector2f(1080.0f, 720.0f));
     camera.AddView(view_main); //add the main view
     camera.AddView(view_UI); //add the UI view
     camera.AddLayer(layer_main); //add the main layer

@@ -2,7 +2,7 @@
 #include <string>
 #include "Game.h"
 #include "SceneNull.h"
-#include "SceneGame.h"
+#include "../BPMScene/BPMScene.h"
 
 static SceneNull nullScene;
 
@@ -11,9 +11,9 @@ Game::Game() : scene_{&nullScene}
     LP_.Load();
     MP_.Load();
 
-    AddScene("Game", new SceneGame(this));
+    AddScene("BPM", new BPMScene(this));
 
-    scene_ = scenes_["Game"];
+    scene_ = scenes_["BPM"];
     scene_->Init();
 }
 

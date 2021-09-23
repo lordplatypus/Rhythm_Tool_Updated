@@ -17,6 +17,7 @@ void LP::LoadTexture()
 void LP::LoadFont()
 {
     // SetFont(Font Key, "Path to Font");
+    SetFont(main_font, "./Blue Sky 8x8.ttf");
 }
 
 
