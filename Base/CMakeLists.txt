@@ -3,7 +3,6 @@ set(SOURCES
 ${SOURCES}
 ${Game_SOURCE_DIR}/Base/Camera.cpp
 ${Game_SOURCE_DIR}/Base/EL.cpp
-${Game_SOURCE_DIR}/Base/ExampleObject.cpp
 ${Game_SOURCE_DIR}/Base/Game.cpp
 ${Game_SOURCE_DIR}/Base/GameObject.cpp
 ${Game_SOURCE_DIR}/Base/GameObjectManager.cpp

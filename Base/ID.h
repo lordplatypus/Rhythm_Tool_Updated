@@ -6,7 +6,10 @@
 //Textures
 enum
 {
-    pic_texture,
+    background_texture,
+    player_texture,
+    heart_texture,
+    small_heart_texture
 };
 
 //Font

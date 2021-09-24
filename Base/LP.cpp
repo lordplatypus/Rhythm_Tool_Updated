@@ -12,6 +12,10 @@ void LP::Load()
 void LP::LoadTexture()
 {
     // SetTexture(Texture Key, "Path to texture", Optional: size of texture);
+    SetTexture(background_texture, "./Background.png");
+    SetTexture(player_texture, "./Player_Roboko.png");
+    SetTexture(heart_texture, "./Heart.png");
+    SetTexture(small_heart_texture, "./HeartSmall.png");
 }
 
 void LP::LoadFont()

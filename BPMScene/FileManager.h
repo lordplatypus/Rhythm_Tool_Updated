@@ -10,15 +10,21 @@ public:
     FileManager();
     ~FileManager();
 
+    void Config();
+    const bool CheckDirectory(const std::string& string);
     std::vector<std::string> SearchDirectory(const std::string& directoryPath, const std::string& fileType);
 
-    //Rhythm Tool Specific
-    const float GetBPM(const std::string& filePath, const std::string& musicTitle) const;
-    void SetBPM(const std::string& filePath, const std::string& musicTitle, const float BPM);
+    //Music Tool Specific (more so anyways)
+    const std::string& GetMusicDirectory() const;
+    void SetMusicDirectory(const std::string& musicDirectoryPath);
+    const std::string& GetBPMDirectory() const;
+    void SetBPMDirectory(const std::string& BPMDirectoryPath);
+    std::vector<std::string> GetAllMusic();
+    const float GetBPM(const std::string& musicTitle) const;
+    void SetBPM(const std::string& musicTitle, const float BPM);
 
-//     void Init();
 
-//     const bool SetDirectory(const std::string& string);
+
 // private:
 //     void ReadDirectory(DIR *dp);
 // public:
@@ -41,6 +47,8 @@ private:
     // std::vector<std::string> files_;
     // std::string activeFile_;
     // std::string activeDirectory_;
+    std::string BPMDirectory_{"./"};
+    std::string musicDirectory_{"./"};
 };
 
 #endif

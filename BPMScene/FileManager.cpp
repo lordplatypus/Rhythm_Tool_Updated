@@ -2,10 +2,42 @@
 #include <iostream>
 
 FileManager::FileManager()
-{}
+{
+    Config();
+}
 
 FileManager::~FileManager()
 {}
+
+void FileManager::Config()
+{
+    std::fstream inputStream("config"); //open confige
+    std::string dummy; //string to store lines
+    while (std::getline(inputStream, dummy))
+    {//while there are still lines to read
+        if (dummy[0] == '#' || dummy == "") continue; //don't read lines that start with '#', nor blank lines
+        if (dummy == "Music Directory:") 
+        {//fist step
+            std::getline(inputStream, dummy); //grab the next line
+            if (CheckDirectory(dummy)) SetMusicDirectory(dummy); //use the directory in the config if there are no problems
+            else SetMusicDirectory("./"); //if the directory in the config fails, use "./"
+        }
+        else if (dummy == "BPM Save File Directory:") 
+        {//second step
+            std::getline(inputStream, dummy); //grab the next line
+            if (CheckDirectory(dummy)) SetBPMDirectory(dummy); //use the directory in the config if there are no problems
+            else SetBPMDirectory("./"); //if the directory in the config fails, use "./"
+        }
+    }
+    inputStream.close(); //close config
+}
+
+const bool FileManager::CheckDirectory(const std::string& string)
+{
+    DIR *dp; //directory
+    if ((dp = opendir(string.c_str())) == NULL) return false; //if the directory doesn't exist, return false
+    return true; //return success
+}
 
 std::vector<std::string> FileManager::SearchDirectory(const std::string& directoryPath, const std::string& fileType)
 {
@@ -28,9 +60,54 @@ std::vector<std::string> FileManager::SearchDirectory(const std::string& directo
     return fileNames;
 }
 
-const float FileManager::GetBPM(const std::string& filePath, const std::string& musicTitle) const
+
+
+const std::string& FileManager::GetMusicDirectory() const
 {
-    std::fstream inputStream(filePath);
+    return musicDirectory_;
+}
+
+void FileManager::SetMusicDirectory(const std::string& musicDirectoryPath)
+{
+    musicDirectory_ = musicDirectoryPath;
+}
+
+const std::string& FileManager::GetBPMDirectory() const
+{
+    return BPMDirectory_;
+}
+
+void FileManager::SetBPMDirectory(const std::string& BPMDirectoryPath)
+{
+    BPMDirectory_ = BPMDirectoryPath;
+}
+
+std::vector<std::string> FileManager::GetAllMusic()
+{
+    std::vector<std::string> musicTitles;
+
+    DIR *dp; //directory
+    if ((dp = opendir(musicDirectory_.c_str())) == NULL)
+    {//formality, program should have defaulted to "./" if the provided directory failed
+        musicTitles.push_back("Failed to open directory");
+        return musicTitles;
+    }
+
+    struct dirent *dirp; 
+    while ((dirp = readdir(dp)) != NULL) 
+    {//while there are files to read
+        std::string fname = dirp->d_name; //store name of the files
+        if(fname.find(".ogg") != std::string::npos ||
+           fname.find(".wav") != std::string::npos ||
+           fname.find(".flac") != std::string::npos) musicTitles.push_back(fname); //if the file is the right type, store the file name
+    }
+
+    return musicTitles;
+}
+
+const float FileManager::GetBPM(const std::string& musicTitle) const
+{
+    std::fstream inputStream(GetBPMDirectory() + "BPM");
     std::string dummy; //string to store lines from the active file
     float BPM = 0.0f;
     while (std::getline(inputStream, dummy))
@@ -47,14 +124,15 @@ const float FileManager::GetBPM(const std::string& filePath, const std::string& 
 }
 
 
-void FileManager::SetBPM(const std::string& filePath, const std::string& musicTitle, const float BPM)
+void FileManager::SetBPM(const std::string& musicTitle, const float BPM)
 {
-    std::fstream inputStream(filePath); //open active file
+    std::fstream inputStream(GetBPMDirectory() + "BPM"); //open active file
     std::string dummy; //string to store lines from the active file
     std::vector<std::string> elements_; //vector of strings to hold the contents of the file
     while (std::getline(inputStream, dummy))
     {//while reading lines
         if (dummy != musicTitle) elements_.push_back(dummy); //copy the files data, minus the element marked for deletion
+        else std::getline(inputStream, dummy); //makes sure that the old BPM doesn't get copied over
     }
     inputStream.close(); //close the active file
 
@@ -63,43 +141,16 @@ void FileManager::SetBPM(const std::string& filePath, const std::string& musicTi
     outputStream_ << musicTitle << std::endl;
     outputStream_ << BPM << std::endl;
     outputStream_.close(); //close the temp file
-    remove((filePath).c_str()); //delete the now old active file and
-    rename("temp.txt", (filePath).c_str()); //replace it with the temp file
+    remove((GetBPMDirectory() + "BPM").c_str()); //delete the now old active file and
+    rename("temp.txt", (GetBPMDirectory() + "BPM").c_str()); //replace it with the temp file
 }
 
 
 
 
-// void FileManager::Init()
-// {
-//     std::fstream inputStream("config"); //open confige
-//     std::string dummy; //string to store lines
-//     int i = 0; //makeshift order of operations
-//     while (std::getline(inputStream, dummy))
-//     {//while there are still lines to read
-//         if (dummy[0] == '#' || dummy == "") continue; //don't read lines that start with '#', nor blank lines
-//         if (i == 0) 
-//         {//fist step
-//             if (!SetDirectory(dummy)) SetDirectory("./"); //if the directory in the config fails, use "./"
-//         }
-//         else if (i == 1)
-//         {//second step
-//             activeFile_ = dummy; //set the active file - if the file doesn't exist, it will be made 
-//         }
-//         i++; //next operation
-//     }
-//     inputStream.close(); //close config
-// }
 
-// const bool FileManager::SetDirectory(const std::string& string)
-// {
-//     DIR *dp; //directory
 
-//     if ((dp = opendir(string.c_str())) == NULL) return false; //if the directory doesn't exist, return false
-//     activeDirectory_ = string; //otherwise set the active directory
-//     ReadDirectory(dp); //then read the directory for text file
-//     return true; //return success
-// }
+
 
 // void FileManager::ReadDirectory(DIR *dp)
 // {

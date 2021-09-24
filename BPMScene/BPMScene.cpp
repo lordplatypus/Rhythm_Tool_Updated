@@ -2,6 +2,9 @@
 #include <math.h>
 #include "../Base/ID.h"
 #include "../Base/Math.h"
+//Objects
+#include "Background.h"
+#include "SaveText.h"
 
 BPMScene::BPMScene(Game* game) : game_{game}
 {}
@@ -11,21 +14,26 @@ BPMScene::~BPMScene()
 
 void BPMScene::Init()
 {
-    //AddGameObject(new Object(position, &pm_, this)); Example
-    menuText_.push_back(game_->GetLP().SetText(main_font, "Choose Music"));
-    menuText_.push_back(game_->GetLP().SetText(main_font, "Start BPM Setup"));
-    menuText_.push_back(game_->GetLP().SetText(main_font, "Start Playback"));
-    menuText_.push_back(game_->GetLP().SetText(main_font, "Save Changes"));
-    //menuText_.push_back(game_->GetLP().SetText(main_font, "Quit"));
+    //Objects
+    AddGameObject(new Background(*this, sf::Vector2f(0.0f, 0.0f)));
+    player_ = new Player(GetLP(), GetMP(), sf::Vector2f(805, 439));
+    AddGameObject(player_);
+    heart_ = new Heart(GetLP(), GetMP(), sf::Vector2f(641, 471));
+    AddGameObject(heart_);
+
+    menuText_.push_back(game_->GetLP().SetText(main_font, "Choose Music", sf::Vector2f(0.0f, 0.0f), 16));
+    menuText_.push_back(game_->GetLP().SetText(main_font, "Start BPM Setup", sf::Vector2f(0.0f, 0.0f), 16));
+    menuText_.push_back(game_->GetLP().SetText(main_font, "Start Playback", sf::Vector2f(0.0f, 0.0f), 16));
+    menuText_.push_back(game_->GetLP().SetText(main_font, "Save Changes", sf::Vector2f(0.0f, 0.0f), 16));
     for (int i = 0; i < menuText_.size(); i++) game_->GetLP().SetTextOriginCenter(menuText_[i]);
 
-    std::vector<std::string> songNames = FM_.SearchDirectory("./", ".ogg");
+    std::vector<std::string> songNames = FM_.GetAllMusic();
     for (int i = 0; i < songNames.size(); i++)
     {
-        musicTitles_.push_back(game_->GetLP().SetText(main_font, songNames[i]));
+        musicTitles_.push_back(game_->GetLP().SetText(main_font, songNames[i], sf::Vector2f(0.0f, 0.0f), 16));
         game_->GetLP().SetTextOriginCenter(musicTitles_[i]);
 
-        float BPM = FM_.GetBPM("./BPM.txt", songNames[i]);
+        float BPM = FM_.GetBPM(songNames[i]);
         secPerBeatMap_[songNames[i]] = sf::seconds(1.0f / (BPM * (1.0f / 60.0f)));
     }
 
@@ -38,7 +46,6 @@ void BPMScene::Init()
     instructions = game_->GetLP().SetText(main_font, "Use Up and Down to\n\ncycle through options\n\nZ to select an option,\n\nX to return to lobby", sf::Vector2f(584+32, 88), 16);
     displayMusicTitle = game_->GetLP().SetText(main_font, "Music Title: NA", sf::Vector2f(96, 448), 16);
     displayBeatsPerMin = game_->GetLP().SetText(main_font, "Beats Per Min: NA", sf::Vector2f(96, 480), 16);
-    //secPerBeat = MP::GetBPMForSelectedMusic(musicID);
     displaySecPerBeat = game_->GetLP().SetText(main_font, "Beats Per Sec: NA", sf::Vector2f(96, 512), 16);
     displayBeatTimer = game_->GetLP().SetText(main_font, "0", sf::Vector2f(96, 544), 16);
     displayBeatCount = game_->GetLP().SetText(main_font, "0", sf::Vector2f(96, 576), 16);
@@ -157,7 +164,7 @@ void BPMScene::ImportSongs()
 {
     for (int i = 0; i < musicTitles_.size(); i++)
     {
-        game_->GetMP().SetMusic(i, "./" + musicTitles_[i].getString());
+        game_->GetMP().SetMusic(i, FM_.GetMusicDirectory() + musicTitles_[i].getString());
     }
 }
 
@@ -240,6 +247,10 @@ void BPMScene::BPMSetUp()
     if (IP_.GetButtonDown(sf::Keyboard::Z))
     {//reset variables
         game_->GetMP().PlayMusic(musicID);
+        player_->SetMusicID(musicID);
+        player_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]);
+        heart_->SetMusicID(musicID);
+        heart_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]);
         secPerBeat = 0;
         beatsPerMin = 0;
         beatTimer = 0;
@@ -277,6 +288,8 @@ void BPMScene::BPMSetUp()
             // }
         }
         count++; //for beat count
+        player_->PlayAnimation();
+        heart_->PlayAnimation();
     }
 
     //update the displays
@@ -298,15 +311,19 @@ void BPMScene::MusicPlayBack()
 {
     if (IP_.GetButtonDown(sf::Keyboard::Up))
     {//actively change the BPM by +1
-        secPerBeat = secPerBeatMap_[musicTitles_[musicID].getString()].asSeconds(); //get sec per beat for the song
-        beatsPerMin = (int)round(60 / secPerBeat + 1); //convert to BPM, then add one
+        beatsPerMin++; //add one to BPM
+        secPerBeatMap_[musicTitles_[musicID].getString()] = sf::seconds(1.0f / (beatsPerMin * (1.0f/60.0f))); //update SPBMap
+        player_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]); //update the BPM for the player
+        heart_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]); //update the BPM for the heart
         displayBeatsPerMin.setString("Beats Per Min: " + std::to_string(beatsPerMin));
         displaySecPerBeat.setString("Beats Per Sec: " + std::to_string(secPerBeat));
     }
     if (IP_.GetButtonDown(sf::Keyboard::Down))
     {//actively change the BPM by -1
-        secPerBeat = secPerBeatMap_[musicTitles_[musicID].getString()].asSeconds(); //get sec per beat for the song
-        beatsPerMin = (int)round(60 / secPerBeat + -1); //convert to BPM, then subtract one
+        beatsPerMin--; //subtract one from BPM
+        secPerBeatMap_[musicTitles_[musicID].getString()] = sf::seconds(1.0f / (beatsPerMin * (1.0f/60.0f))); //update SPBMap
+        player_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]); //update the BPM for the player
+        heart_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]); //update the BPM for the heart
         displayBeatsPerMin.setString("Beats Per Min: " + std::to_string(beatsPerMin));
         displaySecPerBeat.setString("Beats Per Sec: " + std::to_string(secPerBeat));
     }
@@ -317,13 +334,27 @@ void BPMScene::MusicPlayBack()
         secPerBeat = secPerBeatMap_[musicTitles_[musicID].getString()].asSeconds();
         beatsPerMin = (int)round(60 / secPerBeat);
         count = 0;
+        player_->SetAutoAnimation(true);
+        player_->SetMusicID(musicID);
+        player_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]);
+        heart_->SetAutoAnimation(true);
+        heart_->SetMusicID(musicID);
+        heart_->SetBPM(secPerBeatMap_[musicTitles_[musicID].getString()]);
         displayBeatsPerMin.setString("Beats Per Min: " + std::to_string(beatsPerMin));
         displaySecPerBeat.setString("Beats Per Sec: " + std::to_string(secPerBeat));
         firstTime = false;
     }
 
-    //beatTimer = fmod(MP::GetPlayingMusicOffSetInSec(), musicSPBMap[musicID]);
     beatTimer = game_->GetMP().GetMusic(musicID).getPlayingOffset().asMicroseconds() % secPerBeatMap_[musicTitles_[musicID].getString()].asMicroseconds();
+    if (beatTimer < secPerBeatMap_[musicTitles_[musicID].getString()].asMicroseconds() / 2) 
+    {
+        if (!startOfBeat)
+        {
+            startOfBeat = true;
+            count++;
+        }
+    }
+    else startOfBeat = false;
 
     displayBeatTimer.setString("Beat Time: " + std::to_string(beatTimer));
     displayBeatCount.setString("Beat Count: " + std::to_string(count));
@@ -336,6 +367,9 @@ void BPMScene::MusicPlayBack()
         firstTime = true;
         state = Menu;
         instructions.setString("Use Up and Down\n\nto cycle through options,\n\nZ to select an option,\n\nX to return to lobby");
+        game_->GetMP().StopMusic(musicID);
+        player_->SetAutoAnimation(false);
+        heart_->SetAutoAnimation(false);
     }
 }
 
@@ -346,6 +380,19 @@ void BPMScene::SaveBPMForSelectedSong()
     //     MP::SetBPM(musicID, musicSPBMap[musicID]);
     //     alpha = 255;
     // }
-    FM_.SetBPM("./BPM.txt", musicTitles_[musicID].getString(), (int)round(60 / secPerBeatMap_[musicTitles_[musicID].getString()].asSeconds()));
+    FM_.SetBPM(musicTitles_[musicID].getString(), (int)round(60 / secPerBeatMap_[musicTitles_[musicID].getString()].asSeconds()));
+    AddGameObject(new SaveText(*this, sf::Vector2f(1080/2, 720/2), FM_.GetBPMDirectory())); //sf::Vector2f(803, 183)
     state = Menu;
+}
+
+
+
+LP& BPMScene::GetLP()
+{
+    return game_->GetLP();
+}
+
+MP& BPMScene::GetMP()
+{
+    return game_->GetMP();
 }

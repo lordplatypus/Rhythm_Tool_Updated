@@ -6,6 +6,8 @@
 #include "../Base/IP.h"
 #include "FileManager.h"
 #include "VerticalMenu.h"
+#include "Player.h"
+#include "Heart.h"
 
 class BPMScene : public Scene
 {
@@ -27,6 +29,10 @@ private:
     void BPMSetUp();
     void MusicPlayBack();
     void SaveBPMForSelectedSong();
+
+public:
+    LP& GetLP();
+    MP& GetMP();
 
 private:
     Game* game_{nullptr};
@@ -67,6 +73,11 @@ private:
     std::unordered_map<std::string, sf::Time> secPerBeatMap_;
 
     bool firstTime = true;
+    bool startOfBeat = false;
+
+    //Objects
+    Player* player_;
+    Heart* heart_;
 };
 
 #endif

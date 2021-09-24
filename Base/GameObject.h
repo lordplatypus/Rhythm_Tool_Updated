@@ -89,7 +89,7 @@ private:
     bool isActive_{true}; //included in collision calculations?
 
 protected:
-    Scene* scene_{nullptr}; //Gives access to the scene, Set this up in the gameobjects constructor
+    //Scene* scene_{nullptr}; //Gives access to the scene, Set this up in the gameobjects constructor
     sf::Vector2f position_{0.0f, 0.0f}; //gameobjects position
     sf::Vector2f velocity_{0.0f, 0.0f}; //gameobjects velocity
     bool isDead_{false}; //"Death" flag
