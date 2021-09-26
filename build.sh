@@ -2,7 +2,7 @@
 mkdir build && cd ./build
 
 #Generate the make files into the build directory
-cmake -S ../Source -B ./
+cmake -S ../ -B ./
 
 #Make
 make

@@ -27,8 +27,8 @@ add_subdirectory(BPMScene)
 add_executable(Rhythm_Tool ${SOURCES})
 
 # link sub directories
-target_link_directories(Rhythm_Tool PUBLIC "${Game_SOURCE_DIR}/Base")
-target_link_directories(Rhythm_Tool PUBLIC "${Game_SOURCE_DIR}/BPMScene")
+target_link_directories(Rhythm_Tool PUBLIC "${Rhythm_Tool_SOURCE_DIR}/Base")
+target_link_directories(Rhythm_Tool PUBLIC "${Rhythm_Tool_SOURCE_DIR}/BPMScene")
 
 # link SFML libraries
 target_link_libraries(Rhythm_Tool sfml-graphics sfml-window sfml-system sfml-audio)

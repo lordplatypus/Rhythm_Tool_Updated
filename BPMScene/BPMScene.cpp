@@ -38,6 +38,15 @@ void BPMScene::Init()
         float BPM = FM_.GetBPM(songNames[i]);
         secPerBeatMap_[songNames[i]] = sf::seconds(1.0f / (BPM * (1.0f / 60.0f)));
     }
+    if (musicTitles_.size() <= 0)
+    {
+        musicTitles_.push_back(game_->GetLP().SetText(main_font, "Whoops, no music was found!", sf::Vector2f(0.0f, 0.0f), 16));
+        musicTitles_.push_back(game_->GetLP().SetText(main_font, "Place music into the", sf::Vector2f(0.0f, 0.0f), 16));
+        musicTitles_.push_back(game_->GetLP().SetText(main_font, "music directory and restart OR", sf::Vector2f(0.0f, 0.0f), 16));
+        musicTitles_.push_back(game_->GetLP().SetText(main_font, "Change the music directory", sf::Vector2f(0.0f, 0.0f), 16));
+        musicTitles_.push_back(game_->GetLP().SetText(main_font, "in the config file", sf::Vector2f(0.0f, 0.0f), 16));
+        for (int i = 0; i < musicTitles_.size(); i++) game_->GetLP().SetTextOriginCenter(musicTitles_[i]);
+    }
 
     //Verticle menu setup
     menu_ = new VerticalMenu(sf::Vector2f(275, 183), menuText_.size(), menuText_, 3, 1, 32);
