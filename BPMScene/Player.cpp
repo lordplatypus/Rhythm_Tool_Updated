@@ -11,12 +11,12 @@ Player::Player(LP& LP, MP& MP, const sf::Vector2f& position)
     layerID_ = layer_main;
     SetActive(false);
 
-    //Sprite set up
+    //Sprite set up - player sprite (6 frames)
     playerSprites_ = LP_->SetMultiFrameSprite(player_texture, 32, 32, 6, 1, position_);
     for (int i = 0; i < playerSprites_.size(); i++) playerSprites_[i].setScale(sf::Vector2f(6.0f, 6.0f));
 
-    BPM_ = sf::seconds(1.0f / (120.0f * (1.0f/60.0f)));
-    timeInbetweenFrames_ = sf::seconds((1.0f / (120.0f * (1.0f/60.0f))) / 10.0f);
+    BPM_ = sf::seconds(1.0f / (120.0f * (1.0f/60.0f))); //set up the default BPM (actually the seconds per beat)
+    timeInbetweenFrames_ = sf::seconds((1.0f / (120.0f * (1.0f/60.0f))) / 10.0f); //set up the time inbetween animtion frames
 }
 
 Player::~Player()
@@ -25,16 +25,16 @@ Player::~Player()
 void Player::Update(float delta_time)
 {
     if (autoAnim_)
-    {
-        lastBeat_ = beat_;
-        beat_ = MP_->GetMusic(musicID_).getPlayingOffset().asMicroseconds() % BPM_.asMicroseconds();
+    {//if autoAnim flag is active, the animation will play in time to the stored BPM and the offset of currently playing song
+        lastBeat_ = beat_; //update the last beat, then
+        beat_ = MP_->GetMusic(musicID_).getPlayingOffset().asMicroseconds() % BPM_.asMicroseconds(); //update the current beat
         if (lastBeat_ > beat_) 
-        {
+        {//if the lastbeat is larger then the current beat (signifying the start of the next beat) play an animation
             PlayAnimation();
         }
     }
     
-    if (playAnim_) Animation(delta_time);
+    if (playAnim_) Animation(delta_time); //if the playAnim flag is set, continue updating the animation
 }
 
 void Player::Animation(const float delta_time)
@@ -57,8 +57,8 @@ void Player::Draw(Camera& camera) const
 
 void Player::PlayAnimation()
 {
-    playAnim_ = true;
-    frame_ = 0;
+    playAnim_ = true; //set playAnim flag
+    frame_ = 0; //reset the animation frame back to 0
 }
 
 
@@ -73,6 +73,6 @@ void Player::SetMusicID(const int musicID)
 }
 
 void Player::SetAutoAnimation(const bool autoAnim)
-{
+{//sets the autoAnim flag
     autoAnim_ = autoAnim;
 }

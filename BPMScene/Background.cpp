@@ -10,7 +10,7 @@ Background::Background(BPMScene& scene, const sf::Vector2f& position)
     layerID_ = layer_main;
     SetActive(false);
 
-    //Sprite set up
+    //Sprite set up - Background image
     sprite_ = scene_->GetLP().SetSprite(background_texture, position_);
 }
 
@@ -18,9 +18,7 @@ Background::~Background()
 {}
 
 void Background::Update(float delta_time)
-{
-    //Calculations go here
-}
+{}
 
 void Background::Draw(Camera& camera) const
 {

@@ -10,45 +10,22 @@ public:
     FileManager();
     ~FileManager();
 
-    void Config();
-    const bool CheckDirectory(const std::string& string);
-    std::vector<std::string> SearchDirectory(const std::string& directoryPath, const std::string& fileType);
+    void Config(); //read config
+    const bool CheckDirectory(const std::string& string); //check directory to see if it exists
+    std::vector<std::string> SearchDirectory(const std::string& directoryPath, const std::string& fileType); //check directory for files that contain "fileType"
 
     //Music Tool Specific (more so anyways)
     const std::string& GetMusicDirectory() const;
     void SetMusicDirectory(const std::string& musicDirectoryPath);
     const std::string& GetBPMDirectory() const;
     void SetBPMDirectory(const std::string& BPMDirectoryPath);
-    std::vector<std::string> GetAllMusic();
-    const float GetBPM(const std::string& musicTitle) const;
-    void SetBPM(const std::string& musicTitle, const float BPM);
-
-
-
-// private:
-//     void ReadDirectory(DIR *dp);
-// public:
-//     const bool SetFile(const std::string& string);
-// private:
-//     const bool CheckFiles(const std::string& string);
-// public:
-//     const bool AddFile(const std::string& string);
-//     const bool SubFile(const std::string& string);
-//     void DisplayAllFiles() const;
-//     const std::string& GetFile() const;
-//     const std::string& GetDirectory() const;
-
-//     const bool AddElement(const std::string& string);
-//     const bool SubElement(const std::string& string);
-//     const std::string& GetRandElement() const;
-//     void DisplayAllElements() const;
+    std::vector<std::string> GetAllMusic(); //finds all music (.ogg, .wav, .flac) within the musicDirectory_ and stores the file names in a vector
+    const int GetBPM(const std::string& musicTitle) const; //get BPM for selected musicTitle from the BPM save file
+    void SetBPM(const std::string& musicTitle, const int BPM); //save the BPM for selected musicTitle in the BPM save file
 
 private:
-    // std::vector<std::string> files_;
-    // std::string activeFile_;
-    // std::string activeDirectory_;
-    std::string BPMDirectory_{"./"};
-    std::string musicDirectory_{"./"};
+    std::string BPMDirectory_{"./"}; //directory where the BPM save file is located
+    std::string musicDirectory_{"./"}; //directory where the music is located
 };
 
 #endif

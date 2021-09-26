@@ -20,20 +20,20 @@ public:
     void SetAutoAnimation(const bool autoAnim);
 
 private:
-    LP* LP_{nullptr};
-    MP* MP_{nullptr};
-    std::vector<sf::Sprite> playerSprites_;
+    LP* LP_{nullptr}; //visual stuff
+    MP* MP_{nullptr}; //audio stuff
+    std::vector<sf::Sprite> playerSprites_; //sprites for player
 
     //Animation
-    float animTimer_{0.0f};
-    int frame_{0};
-    bool playAnim_{false};
-    sf::Time BPM_;
+    float animTimer_{0.0f}; //timer for animation
+    int frame_{0}; //what frame the animation is on
+    bool playAnim_{false}; //play animation flag
+    sf::Time BPM_; //beats per minute (actually stores seconds per beat)
     sf::Time timeInbetweenFrames_;
-    int beat_{0};
-    int lastBeat_{0};
-    int musicID_{0};
-    bool autoAnim_{false};
+    int beat_{0}; //Stores the time of the current beat (resets to 0 at the start of the next beat)
+    int lastBeat_{0}; //Stores beat_ when beat_ is updated (for auto animation calcs)
+    int musicID_{0}; //current playing music ID 
+    bool autoAnim_{false}; //auto animation flag
 };
 
 #endif

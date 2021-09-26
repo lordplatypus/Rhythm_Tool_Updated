@@ -1,0 +1,16 @@
+#This is the config file for the Rhythm Tool
+#The '#' char denotes a comment and the program will skip lines that start with '#'
+#The order of data is important: i.e. don't place "Music Directory" below "BPM Save File Directory"
+
+#Provide the full path to the music location
+#"./" is the default
+#non-latin characters in the path / music title will break the program 
+#Make sure to end the path with "/"
+Music Directory:
+./
+
+#Provide the full path to the BPM save file
+#"./" is the default
+#if "BPM" doesn't exist, it will be created once a BPM is saved
+BPM Save File Directory:
+./

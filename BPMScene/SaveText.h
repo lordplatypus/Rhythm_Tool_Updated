@@ -13,9 +13,9 @@ public:
 
 private:
     BPMScene* scene_{nullptr};
-    sf::Text saveText_;
-    float alpha_{255.0f};
-    float speed_{100.0f};
+    sf::Text saveText_; //the save text
+    float alpha_{255.0f}; //alpha for the text object
+    float speed_{100.0f}; //speed at which the object fades
 };
 
 #endif

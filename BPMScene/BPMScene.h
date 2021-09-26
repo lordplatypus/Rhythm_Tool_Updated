@@ -57,17 +57,19 @@ private:
     sf::Text displaySecPerBeat;
     sf::Text displayBeatTimer;
     sf::Text displayBeatCount;
+    sf::Text displayMusicDirectory;
+    sf::Text displayBPMSaveDirectory;
 
     //Music Select
     int musicID = 0;
     int selectedMusicID = 0;
 
     //Numbers
-    std::vector<float> listOfBeats;
-    float beatsPerMin{0};
+    std::vector<int> listOfBeats;
+    int beatsPerMin{0};
     float secPerBeat{0};
-    float beatTimer{0};
-    float zeroOutTime{0};
+    int beatTimer{0}; //INT
+    int zeroOutTime{0};
     int count{0};
 
     std::unordered_map<std::string, sf::Time> secPerBeatMap_;
